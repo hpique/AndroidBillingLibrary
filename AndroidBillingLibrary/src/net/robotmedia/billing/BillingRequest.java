@@ -188,9 +188,23 @@ public abstract class BillingRequest {
     	RESULT_DEVELOPER_ERROR, // 5
     	RESULT_ERROR; // 6
 
-    	public static boolean isResponseOk(int response) {
-    		return ResponseCode.RESULT_OK.ordinal() == response;
-    	}
+		public boolean isOkay() {
+			return this.equals(RESULT_OK);
+		}
+
+		public boolean isError() {
+			return !this.isOkay() && !this.equals(RESULT_USER_CANCELED);
+		}
+
+		public static boolean isResponseOk(int response) {
+			return ResponseCode.RESULT_OK.ordinal() == response;
+		}
+
+		public static boolean isResponseError(int response) {
+			final boolean isOkay = ResponseCode.RESULT_OK.ordinal() == response;
+			final boolean isCancel = ResponseCode.RESULT_USER_CANCELED.ordinal() == response;
+			return !isOkay && !isCancel;
+		}
 
     	// Converts from an ordinal value to the ResponseCode
     	public static ResponseCode valueOf(int index) {
